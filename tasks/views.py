@@ -2,13 +2,24 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
-def home(request):
+
     # Work with database
     # Transform Data 
     # Data pass 
     # Http response or Json response or jekono dhoroner response 
-    return HttpResponse('Welcome to the task management system')
+    
 
 
-def show_task(request):
-    return HttpResponse('This is Our Task page')
+def manager_dashboard(request):
+    return render(request, 'dashboard/manager-dashboard.html')
+
+
+def user_dashboard(request):
+    return render(request, 'dashboard/user-dashboard.html')
+
+def test(request):
+    context = {
+        "names": ["Rahim", "Karim", "Rahima", "Karima", "liton"],
+        "age": [20, 25, 30, 35],
+    }
+    return render(request, 'test.html', context)
