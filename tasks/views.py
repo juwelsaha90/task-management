@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from tasks.forms import TaskForm, TaskModelForm
-from tasks.models import Employee, Task
+from tasks.models import Employee, Task,TaskDetail
+from datetime import date
+from django.db.models import Q
 
 # Create your views here.
 
@@ -60,10 +62,10 @@ def create_task(request):
     return render(request, "task_form.html", context)
 
 def view_task(request):
-    # retrive all data from tasks model
-    task = Task.objects.all()
-
-    # retrive single data from tasks model
-
-    task_3 = Task.objects.get(id=1)
-    return render(request, "show_task.html", {"tasks": task, "task3": task_3})
+    # tasks = Task.objects.filter(status="PENDING")
+    # tasks = Task.objects.filter(due_date=date.today())
+    # tasks = TaskDetail.objects.exclude(priority="L")
+    """show the task that contain word 'paper' """
+    # tasks = Task.objects.filter(title__icontains="c", status="PENDING")
+    tasks = Task.objects.filter(Q(status= "PENDING") | Q(status= "IN_PROGRESS"))
+    return render(request, "show_task.html", {"tasks": tasks})
