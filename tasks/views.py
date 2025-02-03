@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from tasks.forms import TaskForm, TaskModelForm
 from tasks.models import Employee, Task,TaskDetail, Project
 from datetime import date
-from django.db.models import Q
+from django.db.models import Q, Count, Sum, Avg, Max, Min, F, Value, CharField
 
 # Create your views here.
 
@@ -30,7 +30,7 @@ def test(request):
 
 
 def create_task(request):
-    # employees = Employee.objects.all()
+    
     form = TaskModelForm()
     if request.method == "POST":
         form = TaskModelForm(request.POST)
@@ -40,33 +40,14 @@ def create_task(request):
 
             return render(request, 'task_form.html', {"form": form, "message": "Task Added Successfully"})
 
-            '''For Django Form Data'''
-            # data = form.cleaned_data
-            # title = data.get("title")
-            # description = data.get("description")
-            # due_date = data.get("due_date")
-            # assigned_to = data.get("assigned_to")
-
-            # task = Task.objects.create(
-            #     title = title,
-            #     description = description,
-            #     due_date = due_date,
-            # )
-            # for emp_id in assigned_to:
-            #     employee = Employee.objects.get(id=emp_id)
-            #     task.assigned_to.add(employee)
-            # return HttpResponse("Task Created Successfully")
+            
 
             
     context = {"form": form}
     return render(request, "task_form.html", context)
 
 def view_task(request):
-#    select_related (Foreignkey, OneToOneField)
-    # tasks = Task.objects.select_related('details').all()
+    # task_count = Task.objects.aggregate(num_task=Count('id'))
+    projects = Project.objects.annotate(num_task=Count('task')).order_by('num_task')
 
-    # tasks = Task.objects.select_related('project').all()
-    """ prefetch_related (manytomany, reverse foreignkey)"""
-    tasks = Project.objects.prefetch_related('task_set').all()
-
-    return render(request, "show_task.html", {"tasks": tasks})
+    return render(request, "show_task.html", {"projects": projects})
