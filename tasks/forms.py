@@ -1,5 +1,5 @@
 from django import forms
-from tasks.models import Task 
+from tasks.models import Task , TaskDetail
 
 class TaskForm(forms.Form):
     title = forms.CharField(max_length=250, label="Task Title")
@@ -60,30 +60,24 @@ class TaskModelForm(StyledFormMixin, forms.ModelForm):
             "assigned_to": forms.CheckboxSelectMultiple
         }
 
-        """Manual Widget Styling"""
-        # widgets = {
-        #     "title": forms.TextInput(attrs={
-        #         "class": "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500",
-        #         "placeholder": "Enter A Descriptive Task Title"
-        #     }),
-        #     "description": forms.Textarea(attrs={
-        #         "class": "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm resize-none focus:outline-none focus:border-rose-500 focus:ring-rose-500",
-        #         "placeholder": "Provide detailed task information",
-        #         "rows": 5
-        #     }),
-        #     "due_date": forms.SelectDateWidget(attrs={
-        #         "class": "border-2 border-gray-900 p-2 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
-                
-        #     }),
-        #     "assigned_to": forms.CheckboxSelectMultiple(attrs={
-        #         "class": "space-y-2"
-        #     }),
-        # }
+      
     
     """Using Mixin Widget"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.apply_styled_widget()
-        
 
+
+class TaskDetailModelForm(StyledFormMixin, forms.ModelForm):
+    """
+    Form for TaskDetail model with styled widgets.
+    """
+    class Meta:
+        model = TaskDetail
+        fields = ['priority', 'notes'] 
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_styled_widget()
+       
         
